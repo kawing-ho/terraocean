@@ -1,4 +1,5 @@
 variable "do_token" {}
+variable "HOME" {}
 locals {
         keyfile = "${var.HOME}/.ssh/terraform_key"
 }
@@ -20,7 +21,7 @@ resource "digitalocean_droplet" "playground" {
         connection {
                 user = "root"
                 type = "ssh"
-                private_key = "${local.keyfile}"
+                private_key = "$file({${local.keyfile})}"
                 timeout = "2m"
         }
 
