@@ -1,11 +1,12 @@
 variable "do_token" {}
+locals {
+        keyfile = "${var.HOME}/.ssh/terraform_key"
+}
 
 provider "digitalocean" {
 
         # included in the super secret local variables file
         token = "${var.do_token}"
-        ssh_fingerprint = "dd:2a:04:8f:f8:69:64:94:a8:de:86:f2:1a:af:b5:3c"
-        private_key = "~/.ssh/terraform_key"
 }
 
 resource "digitalocean_droplet" "playground" {
@@ -19,14 +20,37 @@ resource "digitalocean_droplet" "playground" {
         connection {
                 user = "root"
                 type = "ssh"
-                private_key = "${file(var.private_key)}"
+                private_key = "${local.keyfile}"
                 timeout = "2m"
-
         }
 
 
         provisioner "remote-exec" {
-
-
+                inline = [
+                        "ps",
+                        "date",
+                        "echo test > /tmp/test"
+                ]
         }
+
+        provisioner "local-exec" {
+                # can be used to update SSH config when done perhaps
+                command = "echo ${self.ipv4_address} > /tmp/terraform.log"
+        }
+}
+
+output "public_ip" {
+        value = "${digitalocean_droplet.playground.ipv4_address}"
+}
+
+output "price_hourly" {
+        value = "${digitalocean_droplet.playground.price_hourly}"
+}
+
+output "price_monthly" { 
+        value = "${digitalocean_droplet.playground.price_monthly}"
+}
+
+output "status" {
+        value = "${digitalocean_droplet.playground.status}"
 }
