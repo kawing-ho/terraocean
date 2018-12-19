@@ -21,10 +21,9 @@ resource "digitalocean_droplet" "playground" {
         connection {
                 user = "root"
                 type = "ssh"
-                private_key = "$file({${local.keyfile})}"
                 timeout = "2m"
+                private_key = "${file("${local.keyfile}")}"
         }
-
 
         provisioner "remote-exec" {
                 inline = [
