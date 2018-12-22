@@ -12,10 +12,13 @@ provider "digitalocean" {
 
 resource "digitalocean_droplet" "playground" {
 
+        # we use our own packer-baked custom image
         image = "ubuntu-18-04-x64"
         name = "playground"
         region = "sgp1"
-        size = "s-1vcpu-1gb"
+
+        # s-4vcpu-8gb (example format) 
+        size = "s-4vcpu-8gb"
         ssh_keys = [ "23705689", "23728621" ]
 
         connection {
@@ -26,6 +29,8 @@ resource "digitalocean_droplet" "playground" {
         }
 
         provisioner "remote-exec" {
+
+                # clone the repository (requires repo keys)
                 inline = [
                         "ps",
                         "date",

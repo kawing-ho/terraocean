@@ -1,0 +1,25 @@
+{
+  "_comment": "Packer file used to pre-bake utilities onto the clean image",
+  "_comment": "DIGITALOCEAN_API_TOKEN set as environment variable before running this script",
+
+  "variables": {
+    "token": "{{env `DIGITALOCEAN_API_TOKEN`}}"
+  },
+
+  "builders": [
+    {
+      "image": "ubuntu-18-04-x64",
+      "api_token": "{{user `token}}`",
+      "region": "sgp1",
+      "size": "s-4vcpu-8gb",
+      "snapshot_name": "playground-img-{{timestamp}}"
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "packer_setup.sh"
+    }
+  ]
+}
