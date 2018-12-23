@@ -11,7 +11,7 @@ wget -q "$VIMRC"
 wget -q "$BASH_ALIASES"
 
 # make sure vim is installed
-which vim > /dev/null || apt-get install vim
+which vim > /dev/null || apt-get install -y vim
 
 # ============================
 # install all the tools needed
@@ -31,6 +31,9 @@ apt-get install -y nodejs
 # install yarn
 curl -o- -L https://yarnpkg.com/install.sh | bash
 export PATH="$HOME/.yarn/bin:$PATH"
+
+# install unzip
+apt-get install -y zip
 
 # install packer + terraform
 wget -q -O /tmp/packer.zip "https://releases.hashicorp.com/packer/1.3.3/packer_1.3.3_linux_amd64.zip"

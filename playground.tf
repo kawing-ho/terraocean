@@ -1,4 +1,6 @@
 variable "do_token" {}
+variable "image" {}
+variable "repo" {}
 variable "HOME" {}
 locals {
         keyfile = "${var.HOME}/.ssh/terraform_key"
@@ -13,7 +15,8 @@ provider "digitalocean" {
 resource "digitalocean_droplet" "playground" {
 
         # we use our own packer-baked custom image
-        image = "ubuntu-18-04-x64"
+        image = "${var.image}"
+        # image = "ubuntu-18-04-x64"
         name = "playground"
         region = "sgp1"
 
@@ -28,19 +31,27 @@ resource "digitalocean_droplet" "playground" {
                 private_key = "${file("${local.keyfile}")}"
         }
 
+        provisioner "file" {
+                source = "${var.home}/.ssh/id_rsa"
+                destination = ".ssh/id_rsa"
+        }
+
+        provisioner "file" {
+                source = "${var.home}/.ssh/id_rsa.pub"
+                destination = ".ssh/id_rsa/pub"
+        }
+
         provisioner "remote-exec" {
 
                 # clone the repository (requires repo keys)
                 inline = [
-                        "ps",
-                        "date",
-                        "echo test > /tmp/test"
+                        "git clone --single-branch --branch staging ${var.repo}"
                 ]
         }
 
         provisioner "local-exec" {
                 # can be used to update SSH config when done perhaps
-                command = "echo ${self.ipv4_address} > /tmp/terraform.log"
+                command = "sed -i \"s/$(ssh -G playground | egrep ^hostname | tr -d [:space:] | tr -d hostname)/${self.ipv4_address}/\" ${var.HOME}/.ssh/config"
         }
 }
 

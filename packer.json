@@ -8,11 +8,13 @@
 
   "builders": [
     {
+      "type": "digitalocean",
       "image": "ubuntu-18-04-x64",
-      "api_token": "{{user `token}}`",
+      "api_token": "{{user `token`}}",
       "region": "sgp1",
       "size": "s-4vcpu-8gb",
-      "snapshot_name": "playground-img-{{timestamp}}"
+      "snapshot_name": "playground-img-{{timestamp}}",
+      "ssh_username": "root"
     }
   ],
 
