@@ -53,6 +53,8 @@ resource "digitalocean_droplet" "playground" {
                 # clone the repository (requires repo keys)
                 inline = [
                         "touch .hushlogin",
+                        "git config --global user.email kawing-ho@users.noreply.github.com",
+                        "git config --global user.name kawing-ho",
                         "ssh-keyscan -H github.com >> ~/.ssh/known_hosts",
                         "git clone --single-branch --branch staging ${var.repo}",
                         "docker pull ${var.pull_image}"
