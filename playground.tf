@@ -32,12 +32,12 @@ resource "digitalocean_droplet" "playground" {
         }
 
         provisioner "file" {
-                source = "${var.home}/.ssh/id_rsa"
+                source = "${var.HOME}/.ssh/id_rsa"
                 destination = ".ssh/id_rsa"
         }
 
         provisioner "file" {
-                source = "${var.home}/.ssh/id_rsa.pub"
+                source = "${var.HOME}/.ssh/id_rsa.pub"
                 destination = ".ssh/id_rsa/pub"
         }
 
