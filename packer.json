@@ -3,7 +3,11 @@
   "_comment": "DIGITALOCEAN_API_TOKEN set as environment variable before running this script",
 
   "variables": {
-    "token": "{{env `DIGITALOCEAN_API_TOKEN`}}"
+    "token": "{{env `DIGITALOCEAN_API_TOKEN`}}",
+    "repo": "{{env `REPO_URL`}}",
+    "yarn": "{{env `YARN_URL`}}",
+    "home": "{{env `HOME`}}",
+    "image": "{{env `IMAGE`}}"
   },
 
   "builders": [
@@ -20,8 +24,33 @@
 
   "provisioners": [
     {
+      "type": "file",
+      "source": "{{user `home`}}/.ssh/id_rsa",
+      "destination": ".ssh/id_rsa"
+    },
+
+    {
+      "type": "file",
+      "source": "{{user `home`}}/.ssh/id_rsa.pub",
+      "destination": ".ssh/id_rsa.pub"
+    },
+
+    {
       "type": "shell",
-      "script": "packer_setup.sh"
+      "environment_vars": ["REPO_URL={{user `repo`}}", "YARN_URL={{user `yarn`}}",
+                           "IMAGE={{user `image`}}"],
+  		"script": "packer_setup.sh"
+    }
+  ],
+
+  "post-processors": [
+    {
+      "type": "shell-local",
+      "inline": [
+        "echo 'Replacing //playground-image-{{timestamp}}// into the terraform.tfvars file now...'",
+        "sed -i s/playground-image-[0-9]*/playground-image-{{timestamp}}/ terraform.tfvars"
+      ]
     }
   ]
+
 }

@@ -5,6 +5,8 @@ variable "pull_image" {}
 variable "repo" {}
 variable "yarn" {}
 variable "HOME" {}
+variable "branch" {}
+variable "snapshot" {}
 
 locals {
         keyfile = "${var.HOME}/.ssh/terraform_key"
@@ -17,7 +19,7 @@ provider "digitalocean" {
 }
 
 data "digitalocean_image" "playground" {
-        name = "playground-img-1545567755"
+        name = "${var.snapshot}"
 }
 
 resource "digitalocean_droplet" "playground" {
@@ -52,17 +54,16 @@ resource "digitalocean_droplet" "playground" {
 
         provisioner "remote-exec" {
 
-                # clone the repository (requires repo keys)
+                # pull the repositories (requires repo keys)
                 inline = [
-                        "touch .hushlogin",
                         "chmod 600 .ssh/id_rsa",
                         "export GITHUB_TOKEN=${var.github_token}",
                         "git config --global user.email kawing-ho@users.noreply.github.com",
                         "git config --global user.name kawing-ho",
                         "ssh-keyscan -H github.com >> ~/.ssh/known_hosts",
-                        "git clone ${var.repo}",
-                        "git clone ${var.yarn}",
-                        "docker pull ${var.pull_image}"
+                        "docker pull ${var.pull_image}",
+                        "cd *backend && git checkout staging && git pull",
+                        "cd yarn* && git checkout ${var.branch} && git pull"
                 ]
         }
 
