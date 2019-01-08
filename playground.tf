@@ -1,7 +1,9 @@
 /* Secret variables that I'm not gonna commit to the repo lol */
 variable "do_token" {}
+variable "github_token" {}
 variable "pull_image" {}
 variable "repo" {}
+variable "yarn" {}
 variable "HOME" {}
 
 locals {
@@ -54,10 +56,12 @@ resource "digitalocean_droplet" "playground" {
                 inline = [
                         "touch .hushlogin",
                         "chmod 600 .ssh/id_rsa",
+                        "export GITHUB_TOKEN=${var.github_token}",
                         "git config --global user.email kawing-ho@users.noreply.github.com",
                         "git config --global user.name kawing-ho",
                         "ssh-keyscan -H github.com >> ~/.ssh/known_hosts",
                         "git clone ${var.repo}",
+                        "git clone ${var.yarn}",
                         "docker pull ${var.pull_image}"
                 ]
         }
