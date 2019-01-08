@@ -47,8 +47,8 @@
     {
       "type": "shell-local",
       "inline": [
-        "echo 'Replacing //playground-image-{{timestamp}}// into the terraform.tfvars file now...'",
-        "sed -i s/playground-image-[0-9]*/playground-image-{{timestamp}}/ terraform.tfvars"
+        "echo 'Replacing //playground-img-{{timestamp}}// into the terraform.tfvars file now...'",
+        "sed -i s/playground-img-[0-9]*/playground-img-{{timestamp}}/ terraform.tfvars"
       ]
     }
   ]
