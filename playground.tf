@@ -10,6 +10,8 @@ variable "snapshot" {}
 
 locals {
         keyfile = "${var.HOME}/.ssh/terraform_key"
+        VIMRC="https://raw.githubusercontent.com/kawing-ho/dotfiles/master/.vimrc"
+        BASH_ALIASES="https://raw.githubusercontent.com/kawing-ho/dotfiles/master/.bash_aliases"
 }
 
 provider "digitalocean" {
@@ -56,14 +58,16 @@ resource "digitalocean_droplet" "playground" {
 
                 # pull the repositories (requires repo keys)
                 inline = [
+                        "wget -q ${local.VIMRC}",
+                        "wget -q ${local.BASH_ALIASES}",
                         "chmod 600 .ssh/id_rsa",
                         "export GITHUB_TOKEN=${var.github_token}",
                         "git config --global user.email kawing-ho@users.noreply.github.com",
                         "git config --global user.name kawing-ho",
                         "ssh-keyscan -H github.com >> ~/.ssh/known_hosts",
                         "docker pull ${var.pull_image}",
-                        "cd *backend && git checkout staging && git pull",
-                        "cd yarn* && git checkout ${var.branch} && git pull"
+                        "cd *backend && echo 'Pulling backend...' && git checkout staging && git pull",
+                        "cd ../yarn* && echo 'Pulling yarn...' && git checkout ${var.branch} && git pull"
                 ]
         }
 
