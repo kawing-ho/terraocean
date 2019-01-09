@@ -6,12 +6,7 @@ echo "[-] Executing from within $PWD"
 # reduce noise on login
 touch .hushlogin
 
-# bake my .bashrc iand .vimrc into the image as well because why not
-VIMRC="https://raw.githubusercontent.com/kawing-ho/dotfiles/master/.vimrc"
-BASH_ALIASES="https://raw.githubusercontent.com/kawing-ho/dotfiles/master/.bash_aliases"
-
-wget -q "$VIMRC"
-wget -q "$BASH_ALIASES"
+# *.rc files will be pulled on provision time instead of baked in
 
 # make sure vim is installed
 which vim > /dev/null || apt-get install -y vim
@@ -43,7 +38,7 @@ apt-get install -y nodejs
 curl -o- -L https://yarnpkg.com/install.sh | bash
 
 # install gulp (build yarn from source)
-apt-get install gulp
+apt install gulp
 
 # install packer + terraform
 wget -q -O /tmp/packer.zip "https://releases.hashicorp.com/packer/1.3.3/packer_1.3.3_linux_amd64.zip"
