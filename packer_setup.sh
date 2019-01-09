@@ -38,7 +38,9 @@ apt-get install -y nodejs
 curl -o- -L https://yarnpkg.com/install.sh | bash
 
 # install gulp (build yarn from source)
-apt install gulp
+npm install gulp-cli -g
+npm install gulp -D
+npx -p touch nodetouch gulpfile.js
 
 # install packer + terraform
 wget -q -O /tmp/packer.zip "https://releases.hashicorp.com/packer/1.3.3/packer_1.3.3_linux_amd64.zip"
