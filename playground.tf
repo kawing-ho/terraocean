@@ -58,8 +58,8 @@ resource "digitalocean_droplet" "playground" {
 
                 # pull the repositories (requires repo keys)
                 inline = [
-                        "wget -q ${local.VIMRC}",
-                        "wget -q ${local.BASH_ALIASES}",
+                        "wget -q ${local.VIMRC} -O .vimrc",
+                        "wget -q ${local.BASH_ALIASES} -O .bash_aliases",
                         "chmod 600 .ssh/id_rsa",
                         "export GITHUB_TOKEN=${var.github_token}",
                         "git config --global user.email kawing-ho@users.noreply.github.com",
