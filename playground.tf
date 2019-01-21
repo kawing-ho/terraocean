@@ -69,6 +69,7 @@ resource "digitalocean_droplet" "playground" {
                         "docker pull ${var.pull_image}",
                         "cd *backend && git checkout staging && git pull",
                         "cd ../yarn* && git pull && git checkout ${var.branch}",
+                        "echo '' > .yarnrc",
                         "npm install",
                         "gulp build",
                         "echo 'alias myyarn=/root/yarn/bin/yarn' >> ~/.bash_aliases"
