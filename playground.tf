@@ -72,7 +72,9 @@ resource "digitalocean_droplet" "playground" {
                         "echo '' > .yarnrc",
                         "npm install",
                         "gulp build",
-                        "echo 'alias myyarn=/root/yarn/bin/yarn' >> ~/.bash_aliases"
+                        "echo 'alias myyarn=/root/yarn/bin/yarn' >> ~/.bash_aliases",
+                        "npm install -g nodemon",
+                        "echo \"alias autogulp='cd /root/yarn && nodemon -w ./src -x gulp build'\" >> ~/.bash_aliases"
                 ]
         }
 
