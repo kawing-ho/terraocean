@@ -54,6 +54,7 @@ resource "digitalocean_droplet" "playground" {
                 destination = ".ssh/id_rsa.pub"
         }
 
+        
         provisioner "remote-exec" {
 
                 # pull the repositories (requires repo keys)
@@ -66,9 +67,17 @@ resource "digitalocean_droplet" "playground" {
                         "git config --global user.name kawing-ho",
                         "ssh-keyscan -H github.com >> ~/.ssh/known_hosts",
                         "docker pull ${var.pull_image}",
-                        "cd *backend && echo 'Pulling backend...' && git checkout staging && git pull",
-                        "cd ../yarn* && echo 'Pulling yarn...' && git checkout ${var.branch} && git pull"
+                        "cd *backend && git checkout staging && git pull",
+                        "cd ../yarn* && git pull && git checkout ${var.branch}",
+                        "npm install",
+                        "gulp build",
+                        "echo 'alias myyarn=/root/yarn/bin/yarn' >> ~/.bash_aliases"
                 ]
+        }
+
+        # additional script for launching Jaeger
+        provisioner "remote-exec" {
+                script = "jaeger.sh"
         }
 
         provisioner "local-exec" {
